@@ -16,7 +16,7 @@ export class AuthService {
         password: string,
     ): Promise<any> {
         const user = await this.userService.findOneWUsername(username);
-        if (user && argon2.verify(user.password, password)) {
+        if (user && await argon2.verify(user.password, password)) {
             const { password, ...result } = user;
             return result;
         }
@@ -42,8 +42,19 @@ export class AuthService {
             phone_number,
         } = newUserData;
         const hashedPassword = await argon2.hash(password);
-        const user = await this.userService.createNewUser(firstname, lastname, username, hashedPassword, dob, home_address, phone_number, gender);
-        delete user.password;
-        return user;
+        const user = await this.userService.createNewUser(
+            firstname,
+            lastname,
+            username,
+            hashedPassword,
+            dob,
+            home_address,
+            phone_number,
+            gender,
+        );
+        {
+            const {password, ...result} = user;
+            return result;
+        }
     }
 }
