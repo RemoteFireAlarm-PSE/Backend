@@ -14,7 +14,7 @@ export class UserService {
         });
     }
 
-    async createNewUser(
+    async createOne(
         firstname: string,
         lastname: string,
         username: string,

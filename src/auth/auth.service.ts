@@ -42,7 +42,7 @@ export class AuthService {
             phone_number,
         } = newUserData;
         const hashedPassword = await argon2.hash(password);
-        const user = await this.userService.createNewUser(
+        const user = await this.userService.createOne(
             firstname,
             lastname,
             username,
