@@ -45,7 +45,7 @@ export class CreateUserDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    @Matches(/\d\d\d\\d-\d\d-\d\d/)
+    @Matches(/\d\d\d\d-\d\d-\d\d/)
     dob: string;
 
     @ApiProperty()
