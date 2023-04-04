@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-    constructor(private prismaService: PrismaService) { }
+    constructor(private prismaService: PrismaService) {}
 
     async findOneWUsername(username: string): Promise<User | null> {
         return this.prismaService.user.findUnique({
@@ -14,27 +14,15 @@ export class UserService {
         });
     }
 
-    async createOne(
-        firstname: string,
-        lastname: string,
-        username: string,
-        password: string,
-        dob: string,
-        homeaddress: string,
-        phonenumber: string,
-        gender: string,
-    ) {
+    async getUser(params: { where: Prisma.UserWhereUniqueInput }) {
+        const { where } = params;
+        return this.prismaService.user.findUnique({ where });
+    }
+
+    async createUser(params: { data: Prisma.UserCreateInput }): Promise<User> {
+        const { data } = params;
         const user = await this.prismaService.user.create({
-            data: {
-                firstname,
-                lastname,
-                username,
-                password,
-                dob,
-                homeaddress,
-                phonenumber,
-                gender,
-            },
+            data,
         });
         return user;
     }

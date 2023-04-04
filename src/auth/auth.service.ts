@@ -9,14 +9,14 @@ export class AuthService {
     constructor(
         private userService: UserService,
         private jwtService: JwtService,
-    ) { }
+    ) {}
 
     async validateUserWUsernamePassword(
         username: string,
         password: string,
     ): Promise<any> {
         const user = await this.userService.findOneWUsername(username);
-        if (user && await argon2.verify(user.password, password)) {
+        if (user && (await argon2.verify(user.password, password))) {
             const { password, ...result } = user;
             return result;
         }
@@ -42,18 +42,20 @@ export class AuthService {
             phone_number,
         } = newUserData;
         const hashedPassword = await argon2.hash(password);
-        const user = await this.userService.createOne(
-            firstname,
-            lastname,
-            username,
-            hashedPassword,
-            dob,
-            home_address,
-            phone_number,
-            gender,
-        );
+        const user = await this.userService.createUser({
+            data: {
+                firstname,
+                lastname,
+                username,
+                password: hashedPassword,
+                dob,
+                homeaddress: home_address,
+                phonenumber: phone_number,
+                gender,
+            },
+        });
         {
-            const {password, ...result} = user;
+            const { password, ...result } = user;
             return result;
         }
     }
